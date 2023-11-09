@@ -1,7 +1,6 @@
 package no.hvl.dat108.webshop.controllers;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +13,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import no.hvl.dat108.webshop.interfaces.DeltagerRepo;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import no.hvl.dat108.webshop.objects.Deltager;
 import no.hvl.dat108.webshop.services.DeltagerService;
@@ -31,6 +28,9 @@ public class PaameldingController {
 	
 	@Value("${app.message.ugyldigeDetaljer}") private String UGYLDIGE_DETALJER;
 	@Value("${app.message.eksisterer}") private String EKSISTERER;
+	@Value("${app.message.requiresLogin}") private String REQUIRES_LOGIN_MESSAGE;
+	@Value("${app.url.login}")   private String LOGIN_URL;
+	@Value("${app.url.deltagerliste}") private String DELTAGERLISTE_URL;
 	
 	@Autowired private DeltagerService service;
 	@Autowired private PassordService passService;
@@ -49,6 +49,7 @@ public class PaameldingController {
     
     @PostMapping("/lagreDeltager")
     public String lagreDeltager(@Valid @ModelAttribute("deltager") Deltager deltager,
+    		Model model,
     		HttpServletRequest request,
     		RedirectAttributes ra,
     		BindingResult bindingResult) {
@@ -62,7 +63,7 @@ public class PaameldingController {
 		if(service.eksistererDeltager(deltager.getMobil())) {
 			System.err.print("lagreDeltager feilet ");
 			System.err.println(deltager.getMobil() + " eksisterer allerede");
-			ra.addFlashAttribute("redirectMessage", EKSISTERER);
+			model.addAttribute("redirectMessage", EKSISTERER);
 			return "paamelding_med_melding";
 		}
 		
@@ -73,10 +74,30 @@ public class PaameldingController {
 		
 		System.err.println("DeltagerLagret");
 		service.lagreDeltager(deltager);
+		
 	
     	LoginUtil.loggInnBruker(request, deltager.getMobil(), deltager.getFornavn(), deltager.getEtternavn());
     	
-    	return "redirect:" + "deltagerliste";
+    	return "redirect:"+"paameldt";
+    }
+    
+    @GetMapping("/paameldt")
+    public String redirectToPaaMeldt(Model model,
+    		@ModelAttribute("deltager") Deltager deltager,
+    		HttpSession session,
+    		RedirectAttributes ra
+    		) {
+    	
+    	if (!LoginUtil.erBrukerInnlogget(session)) {
+			ra.addFlashAttribute("redirectMessage", REQUIRES_LOGIN_MESSAGE);
+			return "redirect:" + LOGIN_URL;
+		}
+    	
+    	model.addAttribute("mobil", session.getAttribute("mobil"));
+    	model.addAttribute("fornavn", session.getAttribute("fornavn"));
+    	model.addAttribute("etternavn", session.getAttribute("etternavn"));
+    	
+    	return "paameldt";
     }
     
     @ExceptionHandler(MethodArgumentNotValidException.class)

@@ -1,13 +1,9 @@
 package no.hvl.dat108.webshop.objects;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 import jakarta.validation.constraints.Pattern;
-import no.hvl.dat108.webshop.services.PassordService;
 
 @Entity
 @Table(schema="oblig4")

@@ -72,17 +72,6 @@
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 		</dependency>
-		
-		<dependency>
-			<groupId>no.hvl.dat108</groupId>
-			<artifactId>f18b-validere-person</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>no.hvl.dat108</groupId>
-			<artifactId>f20b-avdeling-crudrepo</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
 	</dependencies>
 
 	<build>

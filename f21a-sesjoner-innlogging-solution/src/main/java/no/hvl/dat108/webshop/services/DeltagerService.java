@@ -1,6 +1,8 @@
 package no.hvl.dat108.webshop.services;
 
 import java.util.List;
+import java.util.function.BooleanSupplier;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import no.hvl.dat108.webshop.interfaces.DeltagerRepo;
@@ -34,4 +36,8 @@ public class DeltagerService {
     public void lagreDeltager(Deltager deltager) {
     	deltagerrepo.save(deltager);
     }
+
+	public List<Deltager> finnDeltagereMedFornavn(String fornavn) {
+		return deltagerrepo.findAllByFornavn(fornavn);
+	}
 }

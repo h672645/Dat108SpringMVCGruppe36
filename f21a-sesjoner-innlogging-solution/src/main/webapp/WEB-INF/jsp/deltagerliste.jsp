@@ -17,7 +17,7 @@
        		<th align="left">Mobil</th>
     	</tr>
     	<c:forEach var="deltager" items="${deltagerList}">
-   			 <tr class="${deltager.mobil == deltagerMobil ? 'highlight' : ''}">
+   			 <tr style="background-color:<c:out value="${deltager.mobil == deltagerMobil ? 'green' : ''}"/>">
         		<td align="center">${deltager.kjonn == 'mann' ? '&#9794;' : '&#9792;'}</td>
         		<td>${deltager.fornavn} ${deltager.etternavn}</td>
         		<td>${deltager.mobil}</td>

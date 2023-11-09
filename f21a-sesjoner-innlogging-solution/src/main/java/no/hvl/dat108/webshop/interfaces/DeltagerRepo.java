@@ -9,4 +9,6 @@ public interface DeltagerRepo extends JpaRepository<Deltager, String> {
     Deltager findByMobil(String mobil);
 
     List<Deltager> findAll(); // This method retrieves all Deltager entities
+
+    List<Deltager> findAllByFornavn(String fornavn);
 }
